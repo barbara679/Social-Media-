@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reel Editor</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">▶</span>
+      <span>Reel Editor</span>
+    </div>
+    <div class="topbar-actions">
+      <label class="btn" for="file-input">+ Import media</label>
+      <input id="file-input" type="file" multiple accept="video/*,image/*,audio/*" hidden>
+      <label class="select-wrap" title="Output size">
+        <span class="sr-only">Aspect ratio</span>
+        <select id="aspect">
+          <option value="9:16">9:16 Reel / TikTok / Story</option>
+          <option value="4:5">4:5 Feed portrait</option>
+          <option value="1:1">1:1 Square</option>
+          <option value="16:9">16:9 YouTube / Landscape</option>
+        </select>
+      </label>
+      <button id="export-btn" class="btn btn-primary" disabled>Export video</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <section class="preview-pane" aria-label="Preview">
+      <div class="stage-wrap" id="stage-wrap">
+        <canvas id="stage" width="1080" height="1920"></canvas>
+        <div class="empty-state" id="empty-state">
+          <p class="empty-title">Drop clips, photos and music here</p>
+          <p class="empty-sub">or use <strong>+ Import media</strong>. Videos and photos go on the timeline; an audio file becomes the music track.</p>
+        </div>
+      </div>
+      <div class="transport">
+        <button id="restart-btn" class="icon-btn" title="Back to start" aria-label="Back to start">⏮</button>
+        <button id="play-btn" class="icon-btn icon-btn-lg" title="Play (Space)" aria-label="Play">▶</button>
+        <span class="timecode"><span id="time-cur">0:00.0</span> / <span id="time-total">0:00.0</span></span>
+      </div>
+    </section>
+
+    <aside class="inspector" aria-label="Inspector">
+      <section id="clip-panel" class="panel" hidden></section>
+
+      <details class="panel" open>
+        <summary>Project</summary>
+        <div class="field">
+          <label class="check"><input type="checkbox" id="fades" checked> Fade transitions between clips</label>
+        </div>
+        <div class="field">
+          <label for="bg-color">Background (letterbox) color</label>
+          <input type="color" id="bg-color" value="#000000">
+        </div>
+        <div class="field-group">
+          <div class="field-head">Music</div>
+          <div id="music-panel"></div>
+        </div>
+      </details>
+
+      <p class="hint">Space = play/pause · Delete = remove selected clip · Drag clips on the timeline to reorder.</p>
+    </aside>
+  </main>
+
+  <section class="timeline-pane" aria-label="Timeline">
+    <div class="timeline-toolbar">
+      <span class="timeline-label">Timeline</span>
+      <label class="zoom">Zoom <input type="range" id="zoom" min="10" max="160" value="50"></label>
+    </div>
+    <div class="timeline-scroll" id="timeline-scroll">
+      <div class="timeline" id="timeline">
+        <div class="ruler" id="ruler"></div>
+        <div class="track" id="track-video"></div>
+        <div class="track track-music" id="track-music"></div>
+        <div class="playhead" id="playhead"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="export-overlay" id="export-overlay" hidden>
+    <div class="export-card">
+      <p class="export-title">Exporting…</p>
+      <p class="export-sub">Export plays the video in real time. Keep this tab open and visible until it finishes.</p>
+      <div class="progress"><div class="progress-bar" id="export-progress"></div></div>
+      <button class="btn" id="export-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <div class="drop-overlay" id="drop-overlay" hidden><p>Drop to import</p></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div id="media-bin" class="media-bin" aria-hidden="true"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
